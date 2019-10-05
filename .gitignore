@@ -16,6 +16,10 @@ output-*/
 # BlueJ files
 *.ctxt
 
+# doc & pdf files
+*.odt
+*.pdf
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
