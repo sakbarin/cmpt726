@@ -14,7 +14,8 @@ tol = 0.00001
 
 # Step size for gradient descent.
 #eta = 0.5
-etas = [0.5]
+etas = [0.5, 0.3, 0.1, 0.05, 0.01]
+colors = ['b', 'g', 'r', 'c', 'm']
 
 # Load data.
 data = np.genfromtxt('data.txt')
@@ -31,9 +32,6 @@ X1 = X[class1]
 class2 = np.where(t == 1)
 X2 = X[class2]
 
-# Initialize w.
-w = np.array([0.1, 0, 0])
-
 # Error values over all iterations.
 e_all = []
 
@@ -49,7 +47,11 @@ plt.ylabel('intercept')
 plt.axis([-5, 5, -10, 0])
 
 
-for eta in etas:
+for idx, eta in enumerate(etas):
+  # Initialize w for current eta
+  w = np.array([0.1, 0, 0])
+  e_all.append([])
+
   for iter in range(0, max_iter):
 
     # Compute output using current w on all data X.
@@ -59,7 +61,7 @@ for eta in etas:
     e = -np.mean(np.multiply(t, np.log(y)) + np.multiply((1-t), np.log(1-y)))
 
     # Add this error to the end of error vector.
-    e_all.append(e)
+    e_all[idx].append(e)
 
     # Gradient of the error, using Eqn 4.91
     grad_e = np.mean(np.multiply((y - t), X.T), axis=1)
@@ -86,14 +88,16 @@ for eta in etas:
 
     # Stop iterating if error doesn't change more than tol.
     if iter > 0:
-      if np.absolute(e-e_all[iter-1]) < tol:
+      if np.absolute(e-e_all[idx][iter-1]) < tol:
         break
 
 # Plot error over iterations
 TRAIN_FIG = 3
 plt.figure(TRAIN_FIG, figsize=(8.5, 6))
-plt.plot(e_all)
+for idx, eta in enumerate(etas):
+  plt.plot(e_all[idx], colors[idx], label="eta: " + str(eta))
 plt.ylabel('Negative log likelihood')
 plt.title('Training logistic regression')
 plt.xlabel('Epoch')
+plt.legend()
 plt.show()
