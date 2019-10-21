@@ -3,6 +3,11 @@ datasets/*
 instructions/*
 output-*/
 
+#pycharm
+.idea
+venv
+__pycache__
+
 # Compiled class file
 *.class
 <<<<<<< HEAD
