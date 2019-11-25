@@ -9,6 +9,7 @@ import torch
 import torchvision.datasets as datasets
 import torchvision.transforms as transforms
 import torch.optim as optim
+
 NUM_EPOCH = 10
 
 def conv3x3(in_planes, out_planes, stride=1):
@@ -127,8 +128,6 @@ class cifar_resnet20(nn.Module):
         out = out.view(out.shape[0], -1)
         return self.fc(out)
 
-
-
 if __name__ == '__main__':
     model = cifar_resnet20()
     transform = transforms.Compose([transforms.ToTensor(),
@@ -139,9 +138,9 @@ if __name__ == '__main__':
                                           shuffle=True, num_workers=2)
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(list(model.fc.parameters()), lr=0.001, momentum=0.9)
+    optimizer = optim.SGD(list(model.fc.parameters()), lr=0.001, momentum=0.9, weight_decay=0.9)
     ## Do the training
-    for epoch in range(NUM_EPOCH):  # loop over the dataset multiple times
+    for epoch in range(1):  # loop over the dataset multiple times
         running_loss = 0.0
         for i, data in enumerate(trainloader, 0):
             # get the inputs
@@ -152,6 +151,7 @@ if __name__ == '__main__':
 
             # forward + backward + optimize
             outputs = model(inputs)
+
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
@@ -160,4 +160,3 @@ if __name__ == '__main__':
                 print('[%d, %5d] loss: %.3f' %
                     (epoch + 1, i + 1, running_loss / 20))
                 running_loss = 0.0
-    print('Finished Training')
